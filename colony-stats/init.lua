@@ -1,5 +1,14 @@
 local colony = peripheral.find("colonyIntegrator")
 local screen = peripheral.find("monitor")
+local function tbl_filter(tbl, filter)
+    local t = {}
+    for _, item in ipairs(tbl) do
+        if filter(item) then
+            tbl_append(t, item)
+        end
+    end
+    return t
+end
 
 local function tbl_append(tbl, item)
     tbl[#tbl + 1] = item
@@ -30,9 +39,11 @@ local function print_stats()
     local housing_used = 0
     local by_type = {}
     local guarded_buildings = 0
-    for _, b in ipairs(buildings) do
-        if b.type == "stash" or b.type == "postbox" then
-        end
+    local ignore_types = {
+        stash=true,
+        postbox=true
+    }
+    for _, b in ipairs(tbl_filter(buildings, function(b) return not ignore_types[b.type] end)) do
         if b.guarded then
             guarded_buildings = guarded_buildings + 1
         end

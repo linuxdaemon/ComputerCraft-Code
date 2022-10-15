@@ -89,7 +89,9 @@ local function print_stats()
     end
     write_line("Guards: %d", guards)
     write_line("Children: %d Unemployed: %d", children, no_job)
-    write_line("Unhappiest: %s", people[1].name)
+    local unhappiest = people[1]
+
+    write_line("Unhappiest: %s (%d)", unhappiest.name, unhappiest.happiness)
     write_line("Levels:")
     local keys = tbl_keys(by_type)
     for _, k in ipairs(keys) do

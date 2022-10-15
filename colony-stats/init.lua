@@ -1,5 +1,10 @@
 local colony = peripheral.find("colonyIntegrator")
 local screen = peripheral.find("monitor")
+
+local function tbl_append(tbl, item)
+    tbl[#tbl + 1] = item
+end
+
 local function tbl_filter(tbl, filter)
     local t = {}
     for _, item in ipairs(tbl) do
@@ -8,10 +13,6 @@ local function tbl_filter(tbl, filter)
         end
     end
     return t
-end
-
-local function tbl_append(tbl, item)
-    tbl[#tbl + 1] = item
 end
 
 local function tbl_keys(tbl)

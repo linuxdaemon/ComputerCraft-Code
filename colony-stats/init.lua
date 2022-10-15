@@ -89,12 +89,12 @@ local function print_stats()
     end
     write_line("Guards: %d", guards)
     write_line("Children: %d Unemployed: %d", children, no_job)
-    local unhappiest = people[1]
-    table.sort(people, function(a, b) return a.happiness < b.happiness end)
     local happiest = people[1]
+    table.sort(people, function(a, b) return a.happiness < b.happiness end)
+    local unhappiest = people[1]
 
     write_line("Unhappiest: %s (%.2f)", unhappiest.name, unhappiest.happiness)
-    write_line("Unhappiest: %s (%.2f)", happiest.name, happiest.happiness)
+    write_line("Happiest: %s (%.2f)", happiest.name, happiest.happiness)
     write_line("Levels:")
     local keys = tbl_keys(by_type)
     for _, k in ipairs(keys) do

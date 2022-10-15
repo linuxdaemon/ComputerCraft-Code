@@ -31,6 +31,7 @@ end
 
 local function print_stats()
     local people = colony.getCitizens()
+    table.sort(people, function(a, b) return a.happiness > b.happiness end)
     local buildings = colony.getBuildings()
     screen.clear()
     screen.setCursorPos(1, 1)
@@ -88,7 +89,7 @@ local function print_stats()
     end
     write_line("Guards: %d", guards)
     write_line("Children: %d Unemployed: %d", children, no_job)
-
+    write_line("Unhappiest: %s", people[1].name)
     write_line("Levels:")
     local keys = tbl_keys(by_type)
     for _, k in ipairs(keys) do

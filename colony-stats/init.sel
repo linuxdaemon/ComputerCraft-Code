@@ -56,7 +56,7 @@ local function print_stats()
         end
         tbl_append(bs, b)
         if b.type == "citizen" then
-            housing_total = housing_total + b.level
+            housing_total += b.level
             housing_used = housing_used + #b.citizens
         end
     end

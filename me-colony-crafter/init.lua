@@ -40,11 +40,11 @@ local function handle_request(request)
         tried_craft[item] = nil
         me.exportItem(item, "UP")
     elseif #craftable > 0 then
-        print(string.format("%s is craftable, crafting", item.name))
         if tried_craft[item] then
             print("Already tried crafting " .. item.name)
         end
         local item = craftable[1]
+        print(string.format("%s is craftable, crafting", item.name))
         tried_craft[item] = true
         ok, msg = me.craftItem(item)
         if not ok then

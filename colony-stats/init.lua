@@ -99,12 +99,17 @@ local function print_stats()
     write_line("Happiest: %s (%.2f)", happiest.name, happiest.happiness)
     write_line("Levels:")
     local keys = tbl_keys(by_type)
+    table.sort(keys)
     for _, k in ipairs(keys) do
         local n = 0
+        local min_level = 5
         for _, b in ipairs(by_type[k]) do
             n = n + b.level
+            if b.level < min_level then
+                min_level = b.level
+            end
         end
-        write_line("- %s = %d", k, n)
+        write_line("- %s = %d (min: %d)", k, n, min_level)
     end
 end
 

@@ -33,19 +33,21 @@ local function print_stats()
     local people = colony.getCitizens()
     table.sort(people, function(a, b) return a.happiness > b.happiness end)
     local buildings = colony.getBuildings()
-    screen.clear()
-    screen.setCursorPos(1, 1)
-    write_line("People: %d", #people)
-    write_line("Buildings: %d", #buildings)
-    local housing_total = 0
-    local housing_used = 0
-    local by_type = {}
-    local guarded_buildings = 0
     local ignore_types = {
         stash=true,
         postbox=true
     }
-    for _, b in ipairs(tbl_filter(buildings, function(b) return not ignore_types[b.type] end)) do
+    local filtered_buildings = tbl_filter(buildings, function(b) return not ignore_types[b.type] end)
+    screen.clear()
+    screen.setCursorPos(1, 1)
+    write_line("People: %d", #people)
+    write_line("Buildings: %d", #filtered_buildings)
+    local housing_total = 0
+    local housing_used = 0
+    local by_type = {}
+    local guarded_buildings = 0
+
+    for _, b in ipairs(filtered_buildings) do
         if b.guarded then
             guarded_buildings = guarded_buildings + 1
         end

@@ -23,6 +23,34 @@ local function tbl_keys(tbl)
     return out
 end
 
+local function tbl_map(tbl, func)
+    local out = {}
+    for i, v in pairs(tbl) do
+        out[i] = func(v)
+    end
+    return out
+end
+
+local function tbl_sum(tbl)
+    local n = 0
+    for _, v in pairs(tbl) do
+        n = n + v
+    end
+    return n
+end
+
+local function tbl_any(tbl, func)
+    if func == nil then
+        func = function(v) return v end
+    end
+    for _, v in ipairs(tbl) do
+        if func(v) then
+            return true
+        end
+    end
+    return false
+end
+
 local function write_line(s, ...)
     screen.write(string.format(s, ...))
     local x, y = screen.getCursorPos()
@@ -101,15 +129,18 @@ local function print_stats()
     local keys = tbl_keys(by_type)
     table.sort(keys)
     for _, k in ipairs(keys) do
-        local n = 0
-        local min_level = 5
-        for _, b in ipairs(by_type[k]) do
-            n = n + b.level
-            if b.level < min_level then
-                min_level = b.level
-            end
+        local bs = by_type[k]
+        local in_progress = tbl_any(bs, function(v) return v.isWorkingOn end)
+        local levels = tbl_map(bs, function(building) return building.level end)
+        local n = tbl_sum(levels)
+        local min_level = math.min(table.unpack(levels))
+        local s
+        if in_progress then
+            s = "*"
+        else
+            s = ""
         end
-        write_line("- %s = %d (min: %d)", k, n, min_level)
+        write_line("- %s%s = %d (min: %d)", s, k, n, min_level)
     end
 end
 

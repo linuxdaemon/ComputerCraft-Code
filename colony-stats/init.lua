@@ -97,12 +97,19 @@ local function print_stats()
     local no_job = 0
     local children = 0
     local is_child = false
+    local homeless = 0
     for _, p in ipairs(people) do
         if p.age ~= "adult" then
             children = children + 1
             is_child = true
         else
             is_child = false
+        end
+        local home = p.home
+        if home == nil then
+            homeless = homeless + 1
+        elseif home.type ~= "citizen" then
+            guards = guards + 1
         end
         local job
         if p.work ~= nil then
@@ -113,11 +120,8 @@ local function print_stats()
                 no_job = no_job + 1
             end
         end
-        if job == "guardtower" then
-            guards = guards + 1
-        end
     end
-    write_line("Guards: %d", guards)
+    write_line("Guards: %d Homeless: %d", guards, homeless)
     write_line("Children: %d Unemployed: %d", children, no_job)
     local happiest = people[1]
     table.sort(people, function(a, b) return a.happiness < b.happiness end)
@@ -133,6 +137,7 @@ local function print_stats()
         local in_progress = tbl_any(bs, function(v) return v.isWorkingOn end)
         local levels = tbl_map(bs, function(building) return building.level end)
         local n = tbl_sum(levels)
+        local avg = n / #levels
         local min_level = math.min(table.unpack(levels))
         local s
         if in_progress then
@@ -140,7 +145,7 @@ local function print_stats()
         else
             s = ""
         end
-        write_line("- %s%s = %d (min: %d)", s, k, n, min_level)
+        write_line("- %s%s = %d (min: %d, avg: %.2f)",s , k, n, min_level, avg)
     end
 end
 

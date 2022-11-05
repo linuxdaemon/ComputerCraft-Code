@@ -124,8 +124,7 @@ local function print_stats()
     write_line("Guards: %d Homeless: %d", guards, homeless)
     write_line("Children: %d Unemployed: %d", children, no_job)
     local happiest = people[1]
-    table.sort(people, function(a, b) return a.happiness < b.happiness end)
-    local unhappiest = people[1]
+    local unhappiest = people[#people]
 
     write_line("Unhappiest: %s (%.2f)", unhappiest.name, unhappiest.happiness)
     write_line("Happiest: %s (%.2f)", happiest.name, happiest.happiness)

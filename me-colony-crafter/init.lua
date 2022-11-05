@@ -14,6 +14,9 @@ end
 local tried_craft = {}
 
 local function handle_request(request)
+    if request.desc == "Smeltable Ore" then
+        return
+    end
     local craftable = {}
     local exportable = {}
     local exported = false

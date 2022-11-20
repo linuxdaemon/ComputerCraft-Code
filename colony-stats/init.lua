@@ -142,7 +142,7 @@ local function print_stats()
             end
         end
         
-        if work ~= nil and not is_child then
+        if work == nil and not is_child then
             no_job = no_job + 1
         end
     end

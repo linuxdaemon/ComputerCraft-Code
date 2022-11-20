@@ -137,7 +137,7 @@ local function print_stats()
                     title=work.type,
                 })
             end
-            if home.type ~= "citizen" then
+            if home.type == "guardtower" or home.type == "barrackstower" then
                 guards = guards + 1
             end
         end

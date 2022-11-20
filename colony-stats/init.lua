@@ -5,6 +5,16 @@ local function tbl_append(tbl, item)
     tbl[#tbl + 1] = item
 end
 
+local function tbl_slice(tbl, startIdx, endIdx)
+    local out = {}
+    for i, v in ipairs(tbl) do
+        if i >= startIdx and i <= endIdx then
+            tbl_append(out, v)
+        end
+    end
+    return out
+end
+
 local function tbl_filter(tbl, filter)
     local t = {}
     for _, item in ipairs(tbl) do
@@ -49,6 +59,15 @@ local function tbl_any(tbl, func)
         end
     end
     return false
+end
+
+local function get_distance(a, b)
+    local total = 0
+    for k, v in pairs(a) do
+        local n = v - b[k]
+        total = total + (n * n)
+    end
+    return math.sqrt(total)
 end
 
 local function write_line(s, ...)
@@ -98,6 +117,7 @@ local function print_stats()
     local children = 0
     local is_child = false
     local homeless = 0
+    local work_distances = {}
     for _, p in ipairs(people) do
         if p.age ~= "adult" then
             children = children + 1
@@ -106,19 +126,23 @@ local function print_stats()
             is_child = false
         end
         local home = p.home
+        local work = p.work
         if home == nil then
             homeless = homeless + 1
-        elseif home.type ~= "citizen" then
-            guards = guards + 1
-        end
-        local job
-        if p.work ~= nil then
-            job = p.work.type
         else
-            job = nil
-            if not is_child then
-                no_job = no_job + 1
+            if work ~= nil then
+                tbl_append(work_distances, {
+                    name=p.name,
+                    distance=get_distance(home.location, work.location)
+                })
             end
+            if home.type ~= "citizen" then
+                guards = guards + 1
+            end
+        end
+        
+        if work ~= nil and not is_child then
+            no_job = no_job + 1
         end
     end
     write_line("Guards: %d Homeless: %d", guards, homeless)
@@ -128,27 +152,30 @@ local function print_stats()
 
     write_line("Unhappiest: %s (%.2f)", unhappiest.name, unhappiest.happiness)
     write_line("Happiest: %s (%.2f)", happiest.name, happiest.happiness)
-    write_line("Levels:")
-    local keys = tbl_keys(by_type)
-    table.sort(keys)
-    for _, k in ipairs(keys) do
-        local bs = by_type[k]
-        local in_progress = tbl_any(bs, function(v) return v.isWorkingOn end)
-        local levels = tbl_map(bs, function(building) return building.level end)
-        local n = tbl_sum(levels)
-        local avg = n / #levels
-        local min_level = math.min(table.unpack(levels))
-        local s
-        if in_progress then
-            s = "*"
-        else
-            s = ""
-        end
-        write_line("- %s%s = %d (min: %d, avg: %.2f)",s , k, n, min_level, avg)
+    table.sort(work_distances, function(a, b) return a.distance > b.distance end)
+    for _, v in ipairs(tbl_slice(work_distances, 1, 10)) do
+        print(v.name, v.distance)
     end
+    -- write_line("Levels:")
+    -- local keys = tbl_keys(by_type)
+    -- table.sort(keys)
+    -- for _, k in ipairs(keys) do
+    --     local bs = by_type[k]
+    --     local in_progress = tbl_any(bs, function(v) return v.isWorkingOn end)
+    --     local levels = tbl_map(bs, function(building) return building.level end)
+    --     local n = tbl_sum(levels)
+    --     local avg = n / #levels
+    --     local min_level = math.min(table.unpack(levels))
+    --     local s
+    --     if in_progress then
+    --         s = "*"
+    --     else
+    --         s = ""
+    --     end
+    --     write_line("- %s%s = %d (min: %d, avg: %.2f)",s , k, n, min_level, avg)
+    -- end
 end
 
 while true do
     print_stats()
-    os.sleep(5)
-end
+    os.sl

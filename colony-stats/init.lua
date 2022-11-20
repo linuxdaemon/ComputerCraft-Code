@@ -133,7 +133,8 @@ local function print_stats()
             if work ~= nil then
                 tbl_append(work_distances, {
                     name=p.name,
-                    distance=get_distance(home.location, work.location)
+                    distance=get_distance(home.location, work.location),
+                    title=work.type,
                 })
             end
             if home.type ~= "citizen" then
@@ -154,7 +155,7 @@ local function print_stats()
     write_line("Happiest: %s (%.2f)", happiest.name, happiest.happiness)
     table.sort(work_distances, function(a, b) return a.distance > b.distance end)
     for _, v in ipairs(tbl_slice(work_distances, 1, 10)) do
-        print(v.name, v.distance)
+        write_line("%s %s %d", v.title, v.name, v.distance)
     end
     -- write_line("Levels:")
     -- local keys = tbl_keys(by_type)

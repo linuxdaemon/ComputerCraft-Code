@@ -178,4 +178,5 @@ end
 
 while true do
     print_stats()
-    os.sl
+    os.sleep(5)
+end

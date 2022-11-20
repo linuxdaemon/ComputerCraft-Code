@@ -58,12 +58,12 @@ local function handle_request(request)
     end
 end
 
+local seen = {}
 local function main_loop()
     stash_items = {}
     for _, item in ipairs(stash.list()) do
         stash_items[item.name] = true
     end
-    local seen = {}
     local requests = colony.getRequests()
     for _, request in ipairs(requests) do
         local first_seen = seen[request.id]

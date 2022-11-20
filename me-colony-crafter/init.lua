@@ -42,6 +42,7 @@ local function handle_request(request)
         print(string.format("Found %s in storage", item.name))
         tried_craft[item] = nil
         me.exportItem(item, "UP")
+        return true
     elseif #craftable > 0 then
         if tried_craft[item] then
             print("Already tried crafting " .. item.name)
@@ -49,12 +50,14 @@ local function handle_request(request)
         local item = craftable[1]
         print(string.format("%s is craftable, crafting", item.name))
         tried_craft[item] = true
-        ok, msg = me.craftItem(item)
+        local ok, msg = me.craftItem(item)
         if not ok then
             print(string.format("Failed to craft %s: %s", item.name, msg))
         end
+        return false
     else
         print("Need " .. request.name .. " for " .. request.target)
+        return false
     end
 end
 
@@ -73,7 +76,9 @@ local function main_loop()
         elseif first_seen < 5 then
             seen[request.id] = first_seen + 1
         else
-            handle_request(request)
+            if handle_request(request) then
+                seen[request.id] = nil
+            end
         end
     end
 end

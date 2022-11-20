@@ -63,9 +63,17 @@ local function main_loop()
     for _, item in ipairs(stash.list()) do
         stash_items[item.name] = true
     end
-    requests = colony.getRequests()
+    local seen = {}
+    local requests = colony.getRequests()
     for _, request in ipairs(requests) do
-        handle_request(request)
+        local first_seen = seen[request.id]
+        if first_seen == nil then
+            seen[request.id] = 0
+        elseif first_seen < 10 then
+            seen[request.id] = first_seen + 1
+        else
+            handle_request(request)
+        end
     end
 end
 

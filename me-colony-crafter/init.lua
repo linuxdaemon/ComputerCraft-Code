@@ -67,10 +67,10 @@ local function main_loop()
     local requests = colony.getRequests()
     for _, request in ipairs(requests) do
         local first_seen = seen[request.id]
-        print(request.desc, first_seen)
+        -- print(request.desc, first_seen)
         if first_seen == nil then
             seen[request.id] = 0
-        elseif first_seen < 10 then
+        elseif first_seen < 5 then
             seen[request.id] = first_seen + 1
         else
             handle_request(request)

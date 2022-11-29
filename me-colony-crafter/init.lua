@@ -23,6 +23,15 @@ end
 
 local allowed = load_allowed_items()
 
+local function add_maybe_allow(item)
+    if allowed[item] or allowed['# ' + item] then
+        return
+    end
+    local f = io.open("allowed_items.cfg", "a+")
+    f:write("# " + item)
+    f:close()
+end
+
 local function translate_item(item, count)
     return {
         name = item.name,
@@ -41,6 +50,7 @@ local function handle_request(request)
     local exported = false
     for _, item in ipairs(request.items) do
         if not allowed[item.name] then
+            add_maybe_allow(item.name)
             return false
         end
         if stash_items[item.name] then
@@ -86,6 +96,7 @@ end
 local seen = {}
 local function main_loop()
     stash_items = {}
+    allowed = load_allowed_items()
     for _, item in ipairs(stash.list()) do
         stash_items[item.name] = true
     end

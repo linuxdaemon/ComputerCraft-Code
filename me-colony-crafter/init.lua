@@ -24,7 +24,7 @@ end
 local allowed = load_allowed_items()
 
 local function add_maybe_allow(item)
-    if allowed[item] or allowed['# '.. item] then
+    if allowed[item] or allowed['# ' .. item] then
         return
     end
     local f = io.open("allowed_items.cfg", "a+")
@@ -105,15 +105,15 @@ local function main_loop()
     for _, request in ipairs(requests) do
         local first_seen = seen[request.id]
         -- print(request.desc, first_seen)
-        if first_seen == nil then
-            seen[request.id] = 0
-        elseif first_seen < 5 then
-            seen[request.id] = first_seen + 1
-        else
+        -- if first_seen == nil then
+        --     seen[request.id] = 0
+        -- elseif first_seen < 5 then
+        --     seen[request.id] = first_seen + 1
+        -- else
             if handle_request(request) then
                 seen[request.id] = nil
             end
-        end
+        -- end
     end
 end
 

@@ -28,7 +28,7 @@ local function add_maybe_allow(item)
         return
     end
     local f = io.open("allowed_items.cfg", "a+")
-    f:write("# " .. item)
+    f:write("# " .. item .. "\n")
     f:close()
 end
 

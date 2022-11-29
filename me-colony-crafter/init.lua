@@ -24,11 +24,11 @@ end
 local allowed = load_allowed_items()
 
 local function add_maybe_allow(item)
-    if allowed[item] or allowed['# ' + item] then
+    if allowed[item] or allowed['# '.. item] then
         return
     end
     local f = io.open("allowed_items.cfg", "a+")
-    f:write("# " + item)
+    f:write("# " .. item)
     f:close()
 end
 

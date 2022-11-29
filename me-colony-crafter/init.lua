@@ -4,6 +4,25 @@ local stash = peripheral.find("minecolonies:stash")
 
 local stash_items = {}
 
+local function load_allowed_items()
+    local out = {}
+    local fname = "allowed_items.cfg"
+    if not fs.exists(fname) then
+        local f = io.open(fname, "w")
+        f:write("")
+        f:close()
+    end
+    local f = io.open(fname, "r")
+    for line in f:lines() do
+        if line and #line > 0 then
+            out[line] = true
+        end
+    end
+    return out
+end
+
+local allowed = load_allowed_items()
+
 local function translate_item(item, count)
     return {
         name = item.name,
@@ -21,6 +40,9 @@ local function handle_request(request)
     local exportable = {}
     local exported = false
     for _, item in ipairs(request.items) do
+        if not allowed[item.name] then
+            return false
+        end
         if stash_items[item.name] then
             print(item.name .. " still in stash")
             return false

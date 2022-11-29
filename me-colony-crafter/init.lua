@@ -51,6 +51,7 @@ local function handle_request(request)
     for _, item in ipairs(request.items) do
         if not allowed[item.name] then
             add_maybe_allow(item.name)
+            print(item.name, " not allowed")
             return false
         end
         if stash_items[item.name] then
